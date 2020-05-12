@@ -1,0 +1,7 @@
+Agenda de contactos
+Añadir un nuevo contacto
+Mostrar listado de contactos
+Buscar un contacto
+Actualizar un contacto
+Eliminar un contacto
+Volver al menú principal

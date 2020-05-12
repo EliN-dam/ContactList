@@ -54,7 +54,7 @@ public class IO {
             String files = "";
             Iterator it = Files.walk(src).iterator();
             while (it.hasNext()){
-                files += it.next() + "\n";//addDescription((Path)it.next());
+                files += it.next() + "\n";
             }
             return files.split("\\n");
         } catch (IOException e){

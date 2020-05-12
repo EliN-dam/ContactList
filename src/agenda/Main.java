@@ -16,6 +16,7 @@ public class Main {
     public static void main(String[] args) {
         byte option = 0;
         String[] mainMenu = IO.loadMenu("data\\menu.txt");
+        Contact[] contacts = null;
         do {
             Console.showMenu(mainMenu, true);
             try {
@@ -32,7 +33,7 @@ public class Main {
                         Console.toContinue();
                         break;
                     case 3:
-                        
+                        new Agenda<Contact>(contacts);
                         break;
                     case 4:
                         String[] files = IO.getFiles("data");

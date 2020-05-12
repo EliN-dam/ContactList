@@ -1,5 +1,8 @@
 package utils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -165,14 +168,17 @@ public class Console {
      * @return A valid integer value introduced by the user. 
      */
     public static int validInt(String message){
+        boolean success = false;
+        int value = -1;
         do {
             try {
-                int value = (int)readNumber(message, "int");
-                return value;
+                value = (int)readNumber(message, "int");
+                success = true;
             } catch (InputMismatchException e){
                 System.out.println("Debe introducir un valor numérico... ");
             }
-        } while (true);
+        } while(!success);
+        return value;
     }
     
     /**
@@ -181,14 +187,17 @@ public class Console {
      * @return A valid double value introduced by the user. 
      */
     public static double validDouble(String message){
+        boolean success = false;
+        double value = -1;
         do {
             try {
-                double value = (double)readNumber(message, "double");
-                return value;
+                value = (double)readNumber(message, "double");
+                success = true;
             } catch (InputMismatchException e){
                 System.out.println("Debe introducir un valor numérico válido... ");
             }
-        } while (true);
+        } while(!success);
+        return value;
     }
     
     /**
@@ -198,32 +207,161 @@ public class Console {
      * @return A valid formated String introduced by the user. 
      */
     public static String validString(String message, int maxLength){
+        boolean success = false;
+        String line = "";
         do {
-            String line = readLine(message).trim();
+            line = readLine(message).trim();
             if (inRange(line.length(), 1, maxLength))
-                return line;
+                success = true;
             else
                 System.out.println("El número máximo de caracteres es " + 
                         maxLength + "... ");
-        } while (true);
+        } while(!success);
+        return line;
     }
     
     /**
-     * Ask the user for an email and check it if valid.
+     * Ask the user for an email and check if it's valid.
      * https://howtodoinjava.com/regex/java-regex-validate-email-address/
      * @param message(String) Message asking the user.
      * @return A valid email. 
      */
     public static String validEmail(String message){
+        boolean success = false;
+        String line = "";
         do {
-            String line = readLine(message).trim();
-            String regex = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?"
-                    + "`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-            if (line.matches(regex))
-                return line;
-            else
+            line = readLine(message).trim();
+            success = checkEmail(line);
+            if (!success)
                 System.out.println("Debes introducir una dirección de correo "
                         + "válida... ");
-        } while(true);
+        } while(!success);
+        return line;
+    }
+    
+    /**
+     * Check if the current String is a valid email address.
+     * @param email(String) An email address.
+     * @return <ul>
+     *              <li>True - If it's valid</li>
+     *              <li>False - If it's invalid</li>
+     *         </ul>
+     */
+    public static boolean checkEmail(String email){
+        String regex = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?"
+                    + "`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+        if (email.matches(regex))
+            return true;
+        else
+            return false;
+    }
+    
+    /**
+     * Ask the user for a phone number and check if it's valid.
+     * @param message(String) Message asking the user.
+     * @return A valid phone number. 
+     */
+    public static String validPhone(String message){
+        boolean success = false;
+        String line = "";
+        do {
+            line = readLine(message).trim();
+            success = checkPhoneNumber(line);
+            if (!success)
+                System.out.println("Debes introducir un número de teléfono válido... ");
+        } while(!success);
+        return line;
+    }
+    
+    /**
+     * Check if a String is a valid phone number.
+     * @param phone(String) A phone number.
+     * @return <ul>
+     *              <li>True - If it's valid</li>
+     *              <li>False - If it's invalid</li>
+     *         </ul>
+     */
+    public static boolean checkPhoneNumber(String phone){
+        String regex = "\\d{9}"; 
+        if (phone.matches(regex))
+            return true;
+        else
+            return false;
+    }    
+        
+    /**
+     * Request user for a date until enter a valid date format.
+     * @param message(String) Message asking the user.
+     * @return A valid date.
+     */
+    public static LocalDate validDate(String message){
+        boolean success = false;
+        String line;
+        LocalDate date = null;
+        do {
+            line = readLine(message).trim();
+            try {
+                DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                date = LocalDate.parse(line, dateFormat);
+                success = true;
+            } catch (DateTimeParseException e){
+                System.out.println("Debe introducir una fecha válida (dd-MM-aaaa)... ");
+            }
+        } while(!success);
+        return date;
+    }
+    
+    /**
+     * Ask the user for a identification number and check if it's valid.
+     * @param message(String) Message asking the user.
+     * @return A valid identification number. 
+     */
+    public static String validDNI(String message){
+        boolean success = false;
+        String line = "";
+        do {
+            line = readLine(message).trim();
+            success = checkDNI(line);
+            if (!success)
+                System.out.println("Debes introducir un DNI válido... ");
+        } while(!success);
+        return line;
+    }    
+    
+    /**
+     * Check if a String is a valid NIF or NIE (Spanish identification number).
+     * http://www.interior.gob.es/web/servicios-al-ciudadano/dni/calculo-del-digito-de-control-del-nif-nie
+     * @param dni(String) An identification number.
+     * @return <ul>
+     *              <li>True - If it's valid</li>
+     *              <li>False - If it's invalid</li>
+     *         </ul>
+     */
+    public static boolean checkDNI(String dni){
+        final String letters = "TRWAGMYFPDXBNJZSQVHLCKE";
+        dni = dni.trim().toUpperCase();
+        if (dni.length() == 9){
+            if (Character.isDigit(dni.charAt(0))){
+                int numbers = Integer.parseInt(dni.substring(0, 8));                
+                return String.valueOf(letters.charAt(numbers % 23)).equals(dni.substring(8, 1));
+            } else {
+                String firstChar = dni.substring(0, 1);
+                int numbers = Integer.parseInt(dni.substring(1, 7));
+                String checkDigit = "";
+                switch(dni.charAt(0)){
+                    case 'X':
+                        checkDigit = String.valueOf(letters.charAt(numbers % 23));
+                        break;
+                    case 'Y':
+                        checkDigit = String.valueOf(letters.charAt((10000000 + numbers) % 23));
+                        break;
+                    case 'Z':
+                        checkDigit = String.valueOf(letters.charAt((20000000 + numbers) % 23));
+                        break;
+                }
+                return checkDigit.equals(dni.substring(8, 1));
+            }
+        }  
+        return false;
     }
 }
