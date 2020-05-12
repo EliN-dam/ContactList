@@ -1,0 +1,6 @@
+Menú Principal
+Cargar datos
+Guardar datos
+Agenda
+Mostrar los archivos externos
+Salir
