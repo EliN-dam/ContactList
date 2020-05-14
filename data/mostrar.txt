@@ -1,0 +1,6 @@
+Listado los contactos
+Ordenado por nombre
+Ordenado por apellidos
+Ordenado por fecha de nacimiento
+Ordenado por clasificación
+Volver a la agenda

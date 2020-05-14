@@ -1,33 +1,29 @@
 package agenda;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.InputMismatchException;
 import utils.Console;
 import utils.IO;
 
 /**
- * Class for managing a contact agenda, allowing insert, update and delete new contacts.
+ * Class for searching objects by some criteria in the collection.
  * @author zelda
  */
-public class Agenda<T> {
+public class Search<T> {
     
     ArrayList<T> contacts;
     
-    public Agenda(T[] contacts){
-        if (contacts != null)
-            this.contacts = new ArrayList<T>(Arrays.asList(contacts));
-        else
-            this.contacts = new ArrayList<T>();
+    public Search(ArrayList<T> contacts){
+        this.contacts = contacts;
         this.menu();
     }
     
     /**
-     * Agenda menu.
+     * Agenda search menu.
      */
     public void menu(){
         byte option = 0;
-        String[] agendaMenu = IO.loadMenu("data\\agenda.txt");
+        String[] agendaMenu = IO.loadMenu("data\\buscar.txt");
         do {
             Console.showMenu(agendaMenu, true);
             try {
@@ -39,28 +35,20 @@ public class Agenda<T> {
                         Console.toContinue();
                         break;
                     case 2:
-                        //if (this.contacts.size() > 0)
-                            new Sort(this.contacts);
-                        /*else
-                            System.out.println("la agenda está vacía." + Console.EOF);*/
+
+                        Console.toContinue();
                         break;
                     case 3:
-                        //if (this.contacts.size() > 0)
-                            new Search(this.contacts);
-                        /*else
-                            System.out.println("la agenda está vacía." + Console.EOF);*/
+
+                        Console.toContinue();
                         break;
                     case 4:
-                        //if (this.contacts.size() > 0)
-                            new Update(this.contacts);
-                        /*else
-                            System.out.println("la agenda está vacía." + Console.EOF);*/
+
+                        Console.toContinue();
                         break;
                     case 5:
-                        //if (this.contacts.size() > 0)
-                            new Delete(this.contacts);
-                        /*else
-                            System.out.println("la agenda está vacía." + Console.EOF);*/
+
+                        Console.toContinue();
                         break;
                     case 6:
                         break;

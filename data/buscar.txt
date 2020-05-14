@@ -1,0 +1,7 @@
+Buscar contacto
+Buscar por DNI
+Buscar por nombre
+Buscar por apellidos
+Buscar por correo electrónico
+Buscar por teléfono
+Volver a la agenda

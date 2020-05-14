@@ -1,0 +1,4 @@
+Eliminar contacto
+Eliminar usando el DNI
+Eliminar usando nombres y apellidos
+Volver a la agenda
