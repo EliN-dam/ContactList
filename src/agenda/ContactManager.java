@@ -32,7 +32,12 @@ public class ContactManager implements Manager<Contact> {
                 System.out.println();
                 switch(option) {
                     case 1:
-                        this.contacts.add(this.newContact());
+                        if (this.contacts.add(this.newContact()))
+                            System.out.println(Console.EOF + "Contacto añadido con "
+                                    + "éxito a la agenda.");
+                        else
+                             System.out.println(Console.EOF + "Ha ocurrido un error, "
+                                     + "no se ha podido añadir el contacto a la agenda.");
                         Console.toContinue();
                         break;
                     case 2:
@@ -78,27 +83,24 @@ public class ContactManager implements Manager<Contact> {
      * @return An array with the values introduced by the user.
      */
     @Override
-    public Object[] newContact(){
-        Object[] values = new Object[7];
-        values[0] = Console.validDNI("Introduce el DNI del nuevo contacto: ");
-        values[1] = Console.readLine("Escribe el nombre/s del contacto: ").trim();
-        values[2] = Console.readLine("Escribe los apellido/s del contacto: ").trim();
+    public Contact newContact(){
+        Contact current = new Contact();
+        current.setDNI(Console.validDNI("Introduce el DNI del nuevo contacto: "));
+        current.setName(Console.readLine("Escribe el nombre/s del contacto: ").trim());
+        current.setLastNames(Console.readLine("Escribe los apellido/s del contacto: ")
+                .trim());
         if (Console.makeSure("¿Desea añadir la fecha de nacimiento?"))
-            values[3] = Console.validDate("Ecriba la fecha de nacimiento (dd-MM-aaaa): ");
+            current.setBirthDate(Console.validDate("Ecriba la fecha de nacimiento "
+                    + "(dd-MM-aaaa): "));
         if (Console.makeSure("¿Desea añadir una puntuación al contacto?"))
-            values[4] = Console.validInt("Introduce la puntuación: ", 1, 5);
-        if (Console.makeSure("¿Desea añadir un correo electrónico?")){
-            values[5] = new String[]{ 
-                    Console.validEmail("Escribe el correo eléctronico a añadir: ")
-            };
-        }
-        if (Console.makeSure("¿Dese añadir un teléfono de contacto?")){
-            values[6] = new String[] {
-                Console.validPhone("Escribe el teléfono a añadir: ")
-                    
-            };
-        }
-        return values;
+            current.setRating(Console.validInt("Introduce la puntuación: ", 1, 5));
+        if (Console.makeSure("¿Desea añadir un correo electrónico?"))
+            current.addEmail(Console.validEmail("Escribe el correo eléctronico a "
+                    + "añadir: "));
+        if (Console.makeSure("¿Dese añadir un teléfono de contacto?"))
+            current.addPhoneNumber(Console.validPhone("Escribe el teléfono a "
+                    + "añadir: "));
+        return current;
     }
     
     /**

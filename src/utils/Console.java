@@ -325,6 +325,7 @@ public class Console {
         LocalDate date = null;
         do {
             line = readLine(message).trim();
+            line = formatDate(line);
             try {
                 DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 date = LocalDate.parse(line, dateFormat);
@@ -334,6 +335,33 @@ public class Console {
             }
         } while(!success);
         return date;
+    }
+    
+    /**
+     * Format a string to a valid format date.
+     * @param date(String) A date.
+     * @return A well formated date.
+     */
+    public static String formatDate(String date){
+        String formatedDate = date;
+        if (!date.matches("[0-9]{2}-[0-9]{2}-[0-9]{4}")){
+            if (date.matches("[0-9]{1,2}/[0-9]{1,2}/([0-9]{2}|[0-9]{4})"))
+                formatedDate = date.replace('/', '-');
+            if (date.matches("[0-9]{1,2}.[0-9]{1,2}.([0-9]{2}|[0-9]{4})")){
+                if (formatedDate.matches("[0-9]{1}.[0-9]{1,2}.([0-9]{2}|[0-9]{4})"))
+                    formatedDate = "0" + formatedDate;
+                if (formatedDate.matches("[0-9]{2}.[0-9]{1}.([0-9]{2}|[0-9]{4})"))
+                    formatedDate = formatedDate.substring(0, 3) + "0" + 
+                                   formatedDate.substring(3);
+                if (formatedDate.matches("[0-9]{2}.[0-9]{2}.[0-9]{2}")){
+                    String thisYear = String.valueOf(LocalDate.now().getYear());
+                    formatedDate = formatedDate.substring(0, 6) + 
+                                   thisYear.substring(0,2) +
+                                   formatedDate.substring(6);            
+                }
+            }
+        }
+        return formatedDate;
     }
     
     /**

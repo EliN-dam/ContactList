@@ -8,6 +8,6 @@ import java.io.Serializable;
  */
 public interface Manager<T extends Serializable> {
     public void menu(String[] menuOptions);
-    public Object[] newContact();
+    public T newContact();
     public Object[] retrieveList();
 }

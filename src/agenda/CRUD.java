@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author zelda
  */
 public interface CRUD<T extends Serializable> {
-    boolean add(Object[] values);
+    boolean add(T newItem);
     void list(ArrayList<T> list);
     void sort(ArrayList<T> list, int criteria);
     void search(ArrayList<T> list, int criteria);

@@ -26,27 +26,15 @@ public class Main {
                 switch(option) {
                     case 1:
                         items = IO.loadData("data\\agenda.dat");
-                        if (items != null)
-                            System.out.println(items.length);
-                        else
-                            System.out.println("No hay contactos.");
                         Console.toContinue();
                         break;
                     case 2:
-                        if (items != null)
-                            System.out.println(items.length);
-                        else
-                            System.out.println("No hay contactos.");
                         IO.saveData(items, "data\\agenda.dat");
                         Console.toContinue();
                         break;
                     case 3:
                         Manager<Contact> agenda = new ContactManager(items);
                         items = agenda.retrieveList();
-                        if (items != null)
-                            System.out.println(items.length);
-                        else
-                            System.out.println("No hay contactos.");
                         break;
                     case 4:
                         String[] files = IO.getFiles("data");

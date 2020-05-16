@@ -22,22 +22,18 @@ public class Contact implements Serializable {
     private String[] emails;
     private String[] phoneNumbers;
     
-    public Contact(String dni, String name, String lastNames, LocalDate birthDate){
-        if (Console.checkDNI(dni))
-            this.DNI = dni;
-        this.name = name;
-        this.lastNames = lastNames;
-        if (birthDate.compareTo(LocalDate.now()) < 0) // Check if the date is older.
-            this.birthDate = birthDate;
+    public Contact(){
+        this.emails = new String[0];
+        this.phoneNumbers = new String[0];        
     }
-    
+       
     public Contact(String dni, String name, String lastNames, LocalDate birthDate, 
             int rating, String[] emails, String[] phoneList){
         if (Console.checkDNI(dni))
             this.DNI = dni;
         this.name = name;
         this.lastNames = lastNames;
-        if (birthDate.compareTo(LocalDate.now()) < 0)
+        if (birthDate.compareTo(LocalDate.now()) < 0) // Check if the date is older.
             this.birthDate = birthDate;
         if (Console.inRange(rating, 1, 5))
             this.rating = rating;

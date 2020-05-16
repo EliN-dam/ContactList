@@ -23,33 +23,18 @@ public class ContactController implements CRUD<Contact> {
     
     /**
      * Add a new contact to the current contact list.
-     * @param values An Array with the new contact values.
+     * @param newContact The contact to want to add to the list.
      * @return <ul>
      *              <li>True - If the contact was added</li>
      *              <li>False - If the contact couldn't be added</li>
      *         </ul>
      */
     @Override
-    public boolean add(Object[] values){
+    public boolean add(Contact newContact){
         boolean success = false;
-        try{
-            this.contactList.add(new Contact(
-                    (String)    values[0], 
-                    (String)    values[1], 
-                    (String)    values[2],
-                    (LocalDate) values[3],
-                    //(values[4] == null) ? null : (int) values[4], COMPROBAR ALTERNATIVAS
-                    (int)       values[4],
-                    (String[])  values[5],
-                    (String[])  values[6]
-                )
-            );
-            System.out.println("\nContacto añadido con éxito a la agenda.");
+        if (newContact != null) {
+            this.contactList.add(newContact);
             success = true;
-        } catch (Exception e){
-            System.out.println("Ha ocurrido un error, no se ha podido añadir el "
-                    + "contacto a la agenda.");
-            e.printStackTrace();
         }
         return success;
     }
