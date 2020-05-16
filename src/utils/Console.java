@@ -182,6 +182,31 @@ public class Console {
     }
     
     /**
+     * Request user for a value until enter a valid integer value.
+     * @param message(String) Message asking the user.
+     * @param minValue(int) The minimum value allowed.
+     * @param maxValue(int) The maximum value allowed.
+     * @return A valid integer value introduced by the user. 
+     */
+    public static int validInt(String message, int minValue, int maxValue){
+        boolean success = false;
+        int value = -1;
+        do {
+            try {
+                value = (int)readNumber(message, "int");
+                if (inRange(value, minValue, maxValue))
+                    success = true;
+                else
+                    System.out.println("debe introducir un numero entre " + 
+                            minValue + " y " + maxValue + "... ");
+            } catch (InputMismatchException e){
+                System.out.println("Debe introducir un valor numérico... ");
+            }
+        } while(!success);
+        return value;
+    }
+    
+    /**
      * Request user for a value until enter a valid decimal value.
      * @param message(String) Message asking the user.
      * @return A valid double value introduced by the user. 
@@ -343,10 +368,9 @@ public class Console {
         if (dni.length() == 9){
             if (Character.isDigit(dni.charAt(0))){
                 int numbers = Integer.parseInt(dni.substring(0, 8));                
-                return String.valueOf(letters.charAt(numbers % 23)).equals(dni.substring(8, 1));
+                return String.valueOf(letters.charAt(numbers % 23)).equals(dni.substring(8, 9));
             } else {
-                String firstChar = dni.substring(0, 1);
-                int numbers = Integer.parseInt(dni.substring(1, 7));
+                int numbers = Integer.parseInt(dni.substring(1, 8));
                 String checkDigit = "";
                 switch(dni.charAt(0)){
                     case 'X':
@@ -359,7 +383,7 @@ public class Console {
                         checkDigit = String.valueOf(letters.charAt((20000000 + numbers) % 23));
                         break;
                 }
-                return checkDigit.equals(dni.substring(8, 1));
+                return checkDigit.equals(dni.substring(8, 9));
             }
         }  
         return false;

@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
         byte option = 0;
         String[] mainMenu = IO.loadMenu("data\\menu.txt");
-        Contact[] contacts = null;
+        Object[] items = null;
         do {
             Console.showMenu(mainMenu, true);
             try {
@@ -25,15 +25,28 @@ public class Main {
                 System.out.println();
                 switch(option) {
                     case 1:
-                        
+                        items = IO.loadData("data\\agenda.dat");
+                        if (items != null)
+                            System.out.println(items.length);
+                        else
+                            System.out.println("No hay contactos.");
                         Console.toContinue();
                         break;
                     case 2:
-                        
+                        if (items != null)
+                            System.out.println(items.length);
+                        else
+                            System.out.println("No hay contactos.");
+                        IO.saveData(items, "data\\agenda.dat");
                         Console.toContinue();
                         break;
                     case 3:
-                        new Agenda<Contact>(contacts);
+                        Manager<Contact> agenda = new ContactManager(items);
+                        items = agenda.retrieveList();
+                        if (items != null)
+                            System.out.println(items.length);
+                        else
+                            System.out.println("No hay contactos.");
                         break;
                     case 4:
                         String[] files = IO.getFiles("data");

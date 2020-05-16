@@ -1,14 +1,18 @@
 package agenda;
 
+import java.io.Serializable;
 import utils.Console;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Class for the contacts of the agenda.
  * @author zelda
  */
-public class Contact {
+public class Contact implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private String DNI;
     private String name;
@@ -35,7 +39,8 @@ public class Contact {
         this.lastNames = lastNames;
         if (birthDate.compareTo(LocalDate.now()) < 0)
             this.birthDate = birthDate;
-        this.rating = rating;
+        if (Console.inRange(rating, 1, 5))
+            this.rating = rating;
         this.emails = emails;
         this.phoneNumbers = phoneList;
     }
@@ -79,7 +84,8 @@ public class Contact {
     }
 
     public void setRating(int rating) {
-        this.rating = rating;
+        if (Console.inRange(rating, 1, 5))
+            this.rating = rating;
     }
 
     public String[] getEmails() {
@@ -104,5 +110,30 @@ public class Contact {
             this.phoneNumbers = Arrays.copyOf(this.phoneNumbers, lastIndex + 1);
             this.phoneNumbers[lastIndex] = newPhone;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 83 * hash + Objects.hashCode(this.DNI);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Contact other = (Contact) obj;
+        if (!Objects.equals(this.DNI, other.DNI)) {
+            return false;
+        }
+        return true;
     }
 }

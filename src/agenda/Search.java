@@ -1,6 +1,5 @@
 package agenda;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import utils.Console;
 import utils.IO;
@@ -9,23 +8,22 @@ import utils.IO;
  * Class for searching objects by some criteria in the collection.
  * @author zelda
  */
-public class Search<T> {
+public class Search {
     
-    ArrayList<T> contacts;
+    CRUD<Contact> contacts;
     
-    public Search(ArrayList<T> contacts){
+    public Search(CRUD<Contact> contacts){
         this.contacts = contacts;
-        this.menu();
+        this.menu(IO.loadMenu("data\\buscar.txt"));
     }
     
     /**
      * Agenda search menu.
      */
-    public void menu(){
+    public void menu(String[] menuOptions){
         byte option = 0;
-        String[] agendaMenu = IO.loadMenu("data\\buscar.txt");
         do {
-            Console.showMenu(agendaMenu, true);
+            Console.showMenu(menuOptions, true);
             try {
                 option = (byte)Console.readNumber(Console.EOF + "Escoge una opción: ", "byte");
                 System.out.println();

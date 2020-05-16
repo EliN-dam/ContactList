@@ -1,6 +1,6 @@
 package agenda;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.InputMismatchException;
 import utils.Console;
 import utils.IO;
@@ -9,23 +9,22 @@ import utils.IO;
  * Class for modifying the items values of the collection.
  * @author zelda
  */
-public class Update<T> {
+public class Update{
     
-    ArrayList<T> contacts;
+    CRUD<Contact> contacts;
     
-    public Update(ArrayList<T> contacts){
+    public Update(CRUD<Contact> contacts){
         this.contacts = contacts;
-        this.menu();
+        this.menu(IO.loadMenu("data\\actualizar.txt"));
     }
     
     /**
      * Agenda update menu.
      */
-    public void menu(){
+    public void menu(String[] menuOptions){
         byte option = 0;
-        String[] agendaMenu = IO.loadMenu("data\\actualizar.txt");
         do {
-            Console.showMenu(agendaMenu, true);
+            Console.showMenu(menuOptions, true);
             try {
                 option = (byte)Console.readNumber(Console.EOF + "Escoge una opción: ", "byte");
                 System.out.println();

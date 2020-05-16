@@ -1,6 +1,6 @@
 package agenda;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.InputMismatchException;
 import utils.Console;
 import utils.IO;
@@ -9,23 +9,22 @@ import utils.IO;
  * Class for erasing items from the collection.
  * @author zelda
  */
-public class Delete<T> {
+public class Delete {
     
-    ArrayList<T> contacts;
+    CRUD<Contact> contacts;
     
-    public Delete(ArrayList<T> contacts){
+    public Delete(CRUD<Contact> contacts){
         this.contacts = contacts;
-        this.menu();
+        this.menu(IO.loadMenu("data\\eliminar.txt"));
     }
     
     /**
      * Agenda delete menu.
      */
-    public void menu(){
+    public void menu(String[] menuOptions){
         byte option = 0;
-        String[] agendaMenu = IO.loadMenu("data\\eliminar.txt");
         do {
-            Console.showMenu(agendaMenu, true);
+            Console.showMenu(menuOptions, true);
             try {
                 option = (byte)Console.readNumber(Console.EOF + "Escoge una opción: ", "byte");
                 System.out.println();

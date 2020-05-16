@@ -1,5 +1,6 @@
 package agenda;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import utils.Console;
@@ -9,23 +10,22 @@ import utils.IO;
  * Class for show the collection sorted by some criteria.
  * @author zelda
  */
-public class Sort<T> {
+public class Sort{
     
-    ArrayList<T> contacts;
+    CRUD<Contact> contacts;
     
-    public Sort(ArrayList<T> contacts){
+    public Sort(CRUD<Contact> contacts){
         this.contacts = contacts;
-        this.menu();
+        this.menu(IO.loadMenu("data\\mostrar.txt"));
     }
     
     /**
      * Agenda sorting menu.
      */
-    public void menu(){
+    public void menu(String[] menuOptions){
         byte option = 0;
-        String[] agendaMenu = IO.loadMenu("data\\mostrar.txt");
         do {
-            Console.showMenu(agendaMenu, true);
+            Console.showMenu(menuOptions, true);
             try {
                 option = (byte)Console.readNumber(Console.EOF + "Escoge una opción: ", "byte");
                 System.out.println();
