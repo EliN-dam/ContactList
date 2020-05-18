@@ -26,17 +26,21 @@ public class Main {
                 switch(option) {
                     case 1:
                         items = IO.loadData("data\\agenda.dat");
-                        Console.toContinue();
+                        System.out.println();
                         break;
                     case 2:
-                        IO.saveData(items, "data\\agenda.dat");
-                        Console.toContinue();
+                        if (Console.makeSure("Se van a sobreescribir los datos ¿Está seguro?"))
+                            IO.saveData(items, "data\\agenda.dat");
+                        else
+                            System.out.println("No se han guardado los datos.");
+                        System.out.println();
+                        //Console.toContinue();
                         break;
                     case 3:
                         Manager<Contact> agenda = new ContactManager(items);
                         items = agenda.retrieveList();
                         break;
-                    case 4:
+                    case 4: // Show the external config files.
                         String[] files = IO.getFiles("data");
                         files[0] = "Archivos del ejercicio";
                         Console.showMenu(files, false);

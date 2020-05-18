@@ -7,7 +7,8 @@ import java.io.Serializable;
  * @author zelda
  */
 public interface Manager<T extends Serializable> {
-    public void menu(String[] menuOptions);
-    public T newContact();
-    public Object[] retrieveList();
+    void menu(String[] menuOptions);
+    T newContact();
+    T[] updateList();
+    Object[] retrieveList();
 }

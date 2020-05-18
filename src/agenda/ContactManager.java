@@ -32,40 +32,43 @@ public class ContactManager implements Manager<Contact> {
                 System.out.println();
                 switch(option) {
                     case 1:
-                        if (this.contacts.add(this.newContact()))
+                        if (this.contacts.add(this.newContact())){
                             System.out.println(Console.EOF + "Contacto añadido con "
                                     + "éxito a la agenda.");
-                        else
+                            /* In the case the first contact add, allow to access 
+                             * to the rest of submenus */
+                            this.list = this.updateList(); 
+                        } else
                              System.out.println(Console.EOF + "Ha ocurrido un error, "
                                      + "no se ha podido añadir el contacto a la agenda.");
                         Console.toContinue();
                         break;
                     case 2:
-                        //if (this.collection.length > 0)
+                        if (this.list != null)
                             new Sort(this.contacts);
-                        /*else
-                            System.out.println("la agenda está vacía." + Console.EOF);*/
+                        else
+                            System.out.println("la agenda está vacía." + Console.EOF);
                         break;
                     case 3:
-                        //if (this.collection.length > 0)
+                        if (this.list != null)
                             new Search(this.contacts);
-                        /*else
-                            System.out.println("la agenda está vacía." + Console.EOF);*/
+                        else
+                            System.out.println("la agenda está vacía." + Console.EOF);
                         break;
                     case 4:
-                        //if (this.collection.length > 0)
+                        if (this.list != null)
                             new Update(this.contacts);
-                        /*else
-                            System.out.println("la agenda está vacía." + Console.EOF);*/
+                        else
+                            System.out.println("la agenda está vacía." + Console.EOF);
                         break;
                     case 5:
-                        //if (this.collection.length > 0)
+                        if (this.list != null)
                             new Delete(this.contacts);
-                        /*else
-                            System.out.println("la agenda está vacía." + Console.EOF);*/
+                        else
+                            System.out.println("la agenda está vacía." + Console.EOF);
                         break;
                     case 6:
-                        this.list = this.contacts.getContactList();
+                        this.list = this.updateList();
                         break;
                     default:
                         System.out.println("La opción seleccionada no "
@@ -75,7 +78,7 @@ public class ContactManager implements Manager<Contact> {
             } catch (InputMismatchException e) {
                 System.out.println(Console.EOF + "Opción no válida, intente lo de nuevo..." + Console.EOF);
             }
-        } while (option != 6);
+        } while (option != menuOptions.length - 1);
     }
     
     /**
@@ -104,8 +107,17 @@ public class ContactManager implements Manager<Contact> {
     }
     
     /**
-     * Return the collection of the agenda as an array.
-     * @return An array with the collection of the agenda.
+     * Update the collection from the controller.
+     * @return The updated contact list.
+     */
+    @Override
+    public Contact[] updateList(){
+        return this.contacts.getContactList();
+    }
+    
+    /**
+     * Return the list of contacts as an objects array.
+     * @return An objects array with the contacts.
      */
     @Override
     public Object[] retrieveList(){

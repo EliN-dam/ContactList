@@ -118,7 +118,7 @@ public class Console {
                           "s|" + EOF, "", title.toUpperCase(), "");
         System.out.println("+================================================+");
     }
-    
+           
     /**
      * Ask the user for confirmation.
      * @param message The confirmation question.
@@ -355,9 +355,15 @@ public class Console {
                                    formatedDate.substring(3);
                 if (formatedDate.matches("[0-9]{2}.[0-9]{2}.[0-9]{2}")){
                     String thisYear = String.valueOf(LocalDate.now().getYear());
-                    formatedDate = formatedDate.substring(0, 6) + 
-                                   thisYear.substring(0,2) +
-                                   formatedDate.substring(6);            
+                    String century = thisYear.substring(0,2);
+                    /* If the last two digits of the date are larger than the two last digits of 
+                     * the current date, then we can suppose that the year corresponds to the last 
+                     * century.
+                     */ 
+                    if (Integer.valueOf(formatedDate.substring(6)) > Integer.valueOf(thisYear.substring(2)))
+                        century = String.valueOf(Integer.valueOf(century) - 1);
+                    formatedDate = formatedDate.substring(0, 6) + century +
+                               formatedDate.substring(6);            
                 }
             }
         }

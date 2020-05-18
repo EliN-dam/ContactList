@@ -2,7 +2,7 @@ Modificar los contactos
 Cambiar el nombre
 Cambiar los apellidos
 Modificar la fecha de nacimiento
-Añadir puntuación al contacto
+Modificar la puntuación del contacto
 Añadir un correo electrónico
 Añadir un teléfono
 Volver a la agenda
