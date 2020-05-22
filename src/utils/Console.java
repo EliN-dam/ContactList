@@ -197,7 +197,7 @@ public class Console {
                 if (inRange(value, minValue, maxValue))
                     success = true;
                 else
-                    System.out.println("debe introducir un numero entre " + 
+                    System.out.println("Debe introducir un numero entre " + 
                             minValue + " y " + maxValue + "... ");
             } catch (InputMismatchException e){
                 System.out.println("Debe introducir un valor numérico... ");
@@ -228,15 +228,16 @@ public class Console {
     /**
      * Request user for a String until enter valid String format base of its length.
      * @param message(String) Message asking the user.
-     * @param maxLength Max number of characters.
+     * @param minLength Minimun number of characters.
+     * @param maxLength Maximun number of characters.
      * @return A valid formated String introduced by the user. 
      */
-    public static String validString(String message, int maxLength){
+    public static String validString(String message, int minLength, int maxLength){
         boolean success = false;
         String line = "";
         do {
             line = readLine(message).trim();
-            if (inRange(line.length(), 1, maxLength))
+            if (inRange(line.length(), minLength, maxLength))
                 success = true;
             else
                 System.out.println("El número máximo de caracteres es " + 

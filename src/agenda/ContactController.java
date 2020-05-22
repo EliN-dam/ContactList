@@ -21,7 +21,6 @@ public class ContactController implements CRUD<Contact> {
         else
             this.contactList = new ArrayList<Contact>();
         getters = loadFunctions();
-        
     }
     
     /**
@@ -30,7 +29,7 @@ public class ContactController implements CRUD<Contact> {
      * @return An ArrayList with the selected functions.
      */
     public static ArrayList<Function<Contact, String>> loadFunctions(){
-        ArrayList<Function<Contact, String>> temp = new ArrayList();
+        ArrayList<Function<Contact, String>> temp = new ArrayList(7);
         temp.add(Contact::getDNI);
         temp.add(Contact::getName);
         temp.add(Contact::getLastNames);
@@ -43,11 +42,17 @@ public class ContactController implements CRUD<Contact> {
         temp.add(contact -> {
                 return String.valueOf(contact.getRating());
         });
-        temp.add(contact -> { //Controlar como se muestran, quizas hacelro en un metodo de clase.
-            return Arrays.toString(contact.getEmails());
+        temp.add(contact -> { 
+            if (contact.getEmails().length > 0)
+                return String.join("\n", contact.getEmails()); // Comprobar el delimitador.
+            else
+                return "N/A";
         });
-        temp.add(contact -> { //Controlar
-            return Arrays.toString(contact.getPhoneNumbers());
+        temp.add(contact -> { 
+            if (contact.getPhoneNumbers().length > 0)
+                return String.join("\n", contact.getPhoneNumbers());
+            else
+                return "N/A";
         });
         return temp;
     }
@@ -77,7 +82,7 @@ public class ContactController implements CRUD<Contact> {
      * @param criteria Criteria for sorting the contact list.
      */
     @Override 
-    public void list(ArrayList<Contact> list, String title, int criteria){
+    public void list(ArrayList<Contact> list, String title){
         String[] labels = {
             "",
             "DNI",
@@ -88,7 +93,7 @@ public class ContactController implements CRUD<Contact> {
             "Emails",
             "Teléfonos"
         };
-        labels[0] = title + " " + labels[criteria];
+        labels[0] = title;
         printTable(list, labels, getTableSizes(list, labels));
     }
     
@@ -102,8 +107,6 @@ public class ContactController implements CRUD<Contact> {
         if (data != null) {
             int titleLength = labels[0].length();
             int nColumns = sizes.length - 1;
-            /* (nColumns * 2) -> 2 espacios adicionales a cada lado para cada dato
-             * (nColumns - 1) -> el espacio para cada columna separadora. */
             int totalSize = sizes[0] + (nColumns * 2) + (nColumns - 1);
             String interline = "+";
             for (int i = 1; i < sizes.length; i++)
@@ -227,70 +230,120 @@ public class ContactController implements CRUD<Contact> {
         }
         
         Comparison compare = new Comparison();
+        String title = "Contactos ordenados por ";
         switch (criteria){
             case 1:
                 Collections.sort(this.contactList, compare::compareByName);
+                title += "Nombre";
                 break;
             case 2:
                 Collections.sort(this.contactList, compare::compareByLastName);
+                title += "Apellidos";
                 break;
             case 3:
                 Collections.sort(this.contactList, compare::compareByBirthDate);
+                title += "Fecha de nacimiento";
                 break;
             case 4:
                 Collections.sort(this.contactList, compare::compareByRating);
+                title += "Puntuación";
                 break;
         }
-        // +1 to match with the menu order.
-        this.list(this.contactList, "Contactos ordenados por", criteria + 1);
+        this.list(this.contactList, title);
     }
     
+    /**
+     * Select the contacts in the contact list that meets the search criteria and 
+     * print them on the console.
+     * @param criteria Criteria for searching in the contact list.
+     * @param value The search value.
+     */
     @Override
-    public void search(int criteria){
+    public void search(int criteria, String value){
         
+        /**
+         * Inner class for search methods by criteria.
+         */
         class searchEngine {
             
             private ArrayList<Contact> found = new ArrayList();
             
-            public void searchByID(ArrayList<Contact> list){
-                //code...
+            public ArrayList<Contact> searchByID(ArrayList<Contact> list, String value){
+                for (Contact current : list){
+                    if (current.getDNI().equalsIgnoreCase(value))
+                        this.found.add(current);
+                }
+                return found;
             }
             
-            public void searchByName(ArrayList<Contact> list){
-                //code...
+            public ArrayList<Contact> searchByName(ArrayList<Contact> list, String value){
+                for (Contact current : list){
+                    if (current.getName().toLowerCase().contains(value.toLowerCase()))
+                        this.found.add(current);
+                }
+                return found;
             }
             
-            public void searchByLastName(ArrayList<Contact> list){
-                
+            public ArrayList<Contact> searchByLastName(ArrayList<Contact> list, String value){
+                for (Contact current : list){
+                    if (current.getLastNames().toLowerCase().contains(value.toLowerCase()))
+                        this.found.add(current);
+                }
+                return found;
             }
             
-            public void searchByEmail(ArrayList<Contact> list){
-                //code...
+            public ArrayList<Contact> searchByEmail(ArrayList<Contact> list, String value){
+                for (Contact current : list){
+                    for (String email: current.getEmails()){
+                        if (email.equalsIgnoreCase(value))
+                            this.found.add(current);
+                    }
+                }
+                return found;
             }
             
-            public void searchByPhone(ArrayList<Contact> list){
-                
+            public ArrayList<Contact> searchByPhone(ArrayList<Contact> list, String value){
+                for (Contact current : list){
+                    for (String phoneNumber : current.getPhoneNumbers()){
+                        if (phoneNumber.equalsIgnoreCase(value))
+                            this.found.add(current);
+                    }
+                }
+                return found;
             }            
         }
         
         searchEngine lookup = new searchEngine();
-        
+        ArrayList<Contact> results = new ArrayList();
+        String message, type = "";
         switch(criteria){
             case 1:
-                lookup.searchByID(this.contactList);
+                results = lookup.searchByID(this.contactList, value);
+                type = "el DNI ";
                 break;
             case 2:
-                lookup.searchByName(this.contactList);
+                results = lookup.searchByName(this.contactList, value);
+                type = "el nombre ";
                 break;
             case 3:
-                lookup.searchByLastName(this.contactList);
+                results = lookup.searchByLastName(this.contactList, value);
+                type = "los apellidos ";
                 break;
             case 4:
-                lookup.searchByEmail(this.contactList);
+                results = lookup.searchByEmail(this.contactList, value);
+                type = "el correo ";
                 break;
             case 5:
-                lookup.searchByPhone(this.contactList);
+                results = lookup.searchByPhone(this.contactList, value);
+                type = "el teléfono ";
                 break;
+        }        
+        if (results.size() > 0){
+            message = "Resultados para " + type + value;
+            this.list(results, message);
+        } else {
+            message = "No se han encontrado resultados para " + type + value + ".";
+            System.out.println(message);
         }
     }
     

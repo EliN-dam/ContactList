@@ -9,9 +9,9 @@ import java.util.ArrayList;
  */
 public interface CRUD<T extends Serializable> {
     boolean add(T newItem);
-    void list(ArrayList<T> list, String title, int criteria);
+    void list(ArrayList<T> list, String title);
     void sort(int criteria);
-    void search(int criteria);
+    void search(int criteria, String value);
     void update(int criteria);
     void delete(int criteria);
     T[] getContactList();
