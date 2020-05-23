@@ -31,7 +31,7 @@ public class Search {
                 if (Console.inRange(option, 1, exit)){
                     if (option != exit){
                         String value = this.getSearchValue(option);
-                        this.contacts.search(option, value);
+                        this.contacts.searchElement(option, value);
                         Console.toContinue();
                     }
                 } else
@@ -48,9 +48,9 @@ public class Search {
      * @param criteria Criteria for searching in the contact list.
      * @return The value for the search.
      */
-    public String getSearchValue(int criteria){
+    public String getSearchValue(int option){
         String value;
-        switch(criteria){
+        switch(option){
             case 1:
                 value = Console.validString("Escribe el DNI del contacto que desea "
                         + "buscar: ", 9, 9);
@@ -72,9 +72,9 @@ public class Search {
                         + "desea buscar: ", 100000000, 999999999)).trim();
                 break;
             default:
-                value = "";
-                break;
+                throw new IllegalStateException("Valor inesperado: " + option);
         }
+        System.out.println();
         return value;
     }
 }

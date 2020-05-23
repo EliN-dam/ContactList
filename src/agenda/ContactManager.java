@@ -15,7 +15,7 @@ public class ContactManager implements Manager<Contact> {
     
     public ContactManager(Object[] collection ){
         this.list = (Contact[])collection;
-        contacts = new ContactController(this.list);
+        contacts = new ContactCRUD(this.list);
         this.menu(IO.loadMenu("data\\agenda.txt"));
     }
     
@@ -32,15 +32,15 @@ public class ContactManager implements Manager<Contact> {
                 System.out.println();
                 switch(option) {
                     case 1:
-                        if (this.contacts.add(this.newContact())){
-                            System.out.println(Console.EOF + "Contacto añadido con "
-                                    + "éxito a la agenda.");
+                        if (this.contacts.addElement(this.newContact())){
+                            System.out.println("Contacto añadido con éxito a la "
+                                    + "agenda.");
                             /* In the case the first contact add, allow to access 
                              * to the rest of submenus */
                             this.list = this.updateList(); 
                         } else
-                             System.out.println(Console.EOF + "Ha ocurrido un error, "
-                                     + "no se ha podido añadir el contacto a la agenda.");
+                             System.out.println("No se ha podido añadir el "
+                                     + "contacto a la agenda.");
                         Console.toContinue();
                         break;
                     case 2:
@@ -57,7 +57,7 @@ public class ContactManager implements Manager<Contact> {
                         break;
                     case 4:
                         if (this.list != null)
-                            new Update(this.contacts);
+                            new Update(this.contacts, this.getID());
                         else
                             System.out.println("la agenda está vacía." + Console.EOF);
                         break;
@@ -100,10 +100,22 @@ public class ContactManager implements Manager<Contact> {
         if (Console.makeSure("¿Desea añadir un correo electrónico?"))
             current.addEmail(Console.validEmail("Escribe el correo eléctronico a "
                     + "añadir: "));
-        if (Console.makeSure("¿Dese añadir un teléfono de contacto?"))
+        if (Console.makeSure("¿Desea añadir un teléfono de contacto?"))
             current.addPhoneNumber(Console.validPhone("Escribe el teléfono a "
                     + "añadir: "));
+        System.out.println();
         return current;
+    }
+    
+    /**
+     * Request the user the ID of the contact.
+     * @return A string with the ID value.
+     */
+    public String getID() {
+        String value = Console.validString("Escribe el DNI del contacto que desea "
+                        + "actualizar: ", 9, 9);
+        System.out.println();
+        return value;
     }
     
     /**
@@ -112,7 +124,7 @@ public class ContactManager implements Manager<Contact> {
      */
     @Override
     public Contact[] updateList(){
-        return this.contacts.getContactList();
+        return this.contacts.getElementList();
     }
     
     /**

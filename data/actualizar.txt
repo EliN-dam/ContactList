@@ -1,4 +1,4 @@
-Modificar los contactos
+Modificar el contacto
 Cambiar el nombre
 Cambiar los apellidos
 Modificar la fecha de nacimiento

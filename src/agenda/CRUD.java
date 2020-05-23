@@ -8,11 +8,15 @@ import java.util.ArrayList;
  * @author zelda
  */
 public interface CRUD<T extends Serializable> {
-    boolean add(T newItem);
+    boolean addElement(T newItem);
+    void sortElement(int option);
+    boolean searchElement(int option, String value);
+    boolean updateElement(T item, int option, Object value);
     void list(ArrayList<T> list, String title);
-    void sort(int criteria);
-    void search(int criteria, String value);
-    void update(int criteria);
-    void delete(int criteria);
-    T[] getContactList();
+    void sort(ArrayList<T> list, Criteria criteria);
+    ArrayList<T> search(ArrayList<T> list, Criteria criteria, String value);
+    void delete(int option);
+    T[] getElementList();
+    T getElementByID(String ID);
+    boolean checkIfExists(T item);
 }

@@ -32,7 +32,7 @@ public class Sort{
                 System.out.println();
                 if (Console.inRange(option, 1, exit)){
                     if (option != exit){
-                        this.contacts.sort(option);
+                        this.contacts.sortElement(option);
                         Console.toContinue();
                     }
                 } else
