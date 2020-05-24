@@ -2,10 +2,10 @@ package utils;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -29,8 +29,8 @@ public class IO {
     public static String[] loadMenu(String path){
         String file = System.getProperty("user.dir") + "\\" + path;
         String data = "";
-        try (BufferedReader read = new BufferedReader(
-                new FileReader(file, StandardCharsets.UTF_8))){
+        try (BufferedReader read = new BufferedReader(new InputStreamReader(
+                new FileInputStream(file), StandardCharsets.UTF_8))){
             String line;
             while((line = read.readLine()) != null)
                 data += line + "\n";
