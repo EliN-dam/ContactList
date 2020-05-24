@@ -191,7 +191,7 @@ public class ContactCRUD implements CRUD<Contact> {
                 criteria = Criteria.ID;
                 break;
             case 2:
-                criteria = Criteria.NAMEANDLASTNAME;
+                criteria = Criteria.FULLNAME;
                 break;
             default:
                 throw new IllegalStateException("Valor inesperado: " + option);
@@ -397,7 +397,7 @@ public class ContactCRUD implements CRUD<Contact> {
             case ID:
                 removeCondition = contact -> contact.getDNI().equalsIgnoreCase(value.toString());
                 return list.removeIf(removeCondition);
-            case NAMEANDLASTNAME:
+            case FULLNAME:
                 removeCondition = contact -> (contact.getName() + " " + 
                         contact.getLastNames()).equalsIgnoreCase(value.toString());
                 return list.removeIf(removeCondition);

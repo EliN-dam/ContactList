@@ -17,6 +17,8 @@ public class Main {
         byte option = 0;
         String[] mainMenu = IO.loadMenu("data\\menu.txt");
         Object[] items = null;
+        boolean saved = false; // if the user save the data.
+        boolean manager = false; //if the user enter in the contact manager.
         do {
             Console.showMenu(mainMenu, true);
             try {
@@ -29,9 +31,10 @@ public class Main {
                         System.out.println();
                         break;
                     case 2:
-                        if (Console.makeSure("Se van a sobreescribir los datos ¿Está seguro?"))
+                        if (Console.makeSure("Se van a sobreescribir los datos ¿Está seguro?")){
                             IO.saveData(items, "data\\agenda.dat");
-                        else
+                            saved = true;
+                        } else
                             System.out.println("No se han guardado los datos.");
                         System.out.println();
                         //Console.toContinue();
@@ -39,6 +42,7 @@ public class Main {
                     case 3:
                         Manager<Contact> agenda = new ContactManager(items);
                         items = agenda.retrieveList();
+                        manager = true;
                         break;
                     case 4: // Show the external config files.
                         String[] files = IO.getFiles("data");
@@ -47,8 +51,18 @@ public class Main {
                         Console.toContinue();
                         break;
                     case 5:
-                        System.out.println("Gracias por utilizar nuestra "
-                                + "aplicación ¡Que tengas un buen día! ");
+                        // Just to make sure the user don't loose any changes.
+                        if (!saved && manager){ 
+                            if (!Console.makeSure("No ha guardado los datos de "
+                                    + "contacto ¿Está seguro que desea salir?")){
+                                option = 0;
+                                
+                            }
+                        } 
+                        System.out.println();
+                        if (option != 0)
+                            System.out.println("Gracias por utilizar nuestra "
+                                    + "aplicación ¡Que tengas un buen día! ");
                         break;
                     default:
                         System.out.println("La opción seleccionada no "
