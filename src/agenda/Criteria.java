@@ -37,7 +37,7 @@ enum Criteria {
             else
                 return "N/A";
     }, Contact::addPhoneNumber, null),
-    NAMEANDLASTNAME(null, null, null); // This constant is only for delete function.
+    FULLNAME(null, null, null); // This constant is only for delete function.
     
     private final Function<Contact, Object> getter;
     private final BiConsumer<Contact, String> setter;
