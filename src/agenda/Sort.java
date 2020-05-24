@@ -34,6 +34,7 @@ public class Sort{
                     if (option != exit){
                         this.contacts.sortElement(option);
                         Console.toContinue();
+                        option = exit;
                     }
                 } else
                     System.out.println("La opción seleccionada no "

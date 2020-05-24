@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -93,7 +92,7 @@ public class ContactCRUD implements CRUD<Contact> {
      *         </ul>
      */
     @Override
-    public boolean searchElement(int option, String value){
+    public boolean searchElement(int option, Object value){
         String message, type = "";
         Criteria criteria;
         switch(option){
@@ -121,7 +120,7 @@ public class ContactCRUD implements CRUD<Contact> {
                 throw new IllegalStateException("Valor inesperado: " + option);
         }
         ArrayList<Contact> results = this.search(this.contactList, criteria, value);
-        if (results.size() > 0){
+        if (!results.isEmpty()){
             message = "Resultados para " + type + value;
             this.list(results, message);
             return true;
@@ -136,7 +135,7 @@ public class ContactCRUD implements CRUD<Contact> {
      * Update a contact's information using the chosen attributes.
      * @param contact The contact to be updated.
      * @param option Criteria for the selection of the attribute to be updated.
-     * @param value The new value to be update.
+     * @param value The new value for the update.
      * @return <ul>
      *              <li>True - If the contact was updated</li>
      *              <li>False - If the contact could not be updated</li>
@@ -145,32 +144,59 @@ public class ContactCRUD implements CRUD<Contact> {
     @Override
     public boolean updateElement(Contact contact, int option, Object value){
         boolean success = false;
+        Criteria criteria;
         if (value != null){
             switch(option){
                 case 1:
-                    contact.setName((String)value);
+                    criteria = Criteria.NAME;
                     break;
                 case 2:
-                    contact.setLastNames((String)value);
+                    criteria = Criteria.LASTNAME;
                     break;
                 case 3:
-                    contact.setBirthDate((LocalDate)value);
+                    criteria = Criteria.BIRTHDATE;
                     break;
                 case 4:
-                    contact.setRating((int)value);
+                    criteria = Criteria.RATING;
                     break;
                 case 5:
-                    contact.addEmail((String)value);
+                    criteria = Criteria.EMAILS;
                     break;
                 case 6:
-                    contact.addPhoneNumber((String)value);
+                    criteria = Criteria.PHONENUMBERS;
                     break;
                 default:
                     throw new IllegalStateException("Valor inesperado: " + option);
             }
+            this.update(contact, criteria, value.toString());
             success = true;
         }
         return success;
+    }
+    
+    /**
+     * Removing a contact if exists in the contact list.
+     * @param option Criteria for identify a contact.
+     * @param value The value to identify a contact in the contact list.
+     * @return <ul>
+     *              <li>True - If the contact was deleted</li>
+     *              <li>False - If the contact could not be deleted</li>
+     *         </ul>
+     */
+    @Override
+    public boolean deleteElement(int option, Object value){
+        Criteria criteria;
+        switch(option){
+            case 1:
+                criteria = Criteria.ID;
+                break;
+            case 2:
+                criteria = Criteria.NAMEANDLASTNAME;
+                break;
+            default:
+                throw new IllegalStateException("Valor inesperado: " + option);
+        }
+        return this.delete(this.contactList, criteria, value);
     }
     
     /**
@@ -235,7 +261,7 @@ public class ContactCRUD implements CRUD<Contact> {
                 current = data.get(i);
                 System.out.print("|");
                 for (int j = 1; j < sizes.length; j++){
-                    value = getters[j - 1].getMethod().apply(current).toString();
+                    value = getters[j - 1].getGetter().apply(current).toString();
                     System.out.printf("%" + (sizes[j] - value.length() + 2) / 2 + "s%-" + 
                         value.length() + "s%" + (sizes[j] - value.length() + 3) / 2 + 
                         "s|","", value, "");
@@ -265,10 +291,10 @@ public class ContactCRUD implements CRUD<Contact> {
         Criteria[] getters = Criteria.values();
         for (int i = 0; i < list.size(); i++){
             current = list.get(i);
-            for (int j = 0; j < getters.length; j++){
-                value = getters[j].getMethod().apply(current).toString().length();
-                if (value > sizes[j + 1])
-                    sizes[j + 1] = value;
+            for (int j = 1; j < sizes.length; j++){
+                value = getters[j - 1].getGetter().apply(current).toString().length();
+                if (value > sizes[j])
+                    sizes[j] = value;
             } 
         }
         // Get max total size.
@@ -285,7 +311,7 @@ public class ContactCRUD implements CRUD<Contact> {
     @Override
     public void sort(ArrayList<Contact> list, Criteria criteria){
         Collections.sort(list, criteria.getComparator());
-    }  
+    }
 
     /**
      * Search in an ArrayList the elements that meets the search value.
@@ -295,27 +321,27 @@ public class ContactCRUD implements CRUD<Contact> {
      * @return An ArrayList with the elements who meets the search criteria.
      */
     @Override
-    public ArrayList<Contact> search(ArrayList<Contact> list, Criteria criteria, String value){
+    public ArrayList<Contact> search(ArrayList<Contact> list, Criteria criteria, Object value){
         Predicate<Contact> searchEngine;
         switch(criteria){
             case ID:
-                searchEngine = contact -> contact.getDNI().equalsIgnoreCase(value);
+                searchEngine = contact -> contact.getDNI().equalsIgnoreCase(value.toString());
                 break;
             case NAME:
                 searchEngine = contact -> contact.getName().toLowerCase().contains
-                                          (value.toLowerCase());
+                                          (value.toString().toLowerCase());
                 break;
             case LASTNAME:
                 searchEngine = contact -> contact.getLastNames().toLowerCase()
-                                          .contains(value.toLowerCase());
+                                          .contains(value.toString().toLowerCase());
                 break;
             case EMAILS:
                 searchEngine = contact -> Arrays.stream(contact.getEmails())
-                        .anyMatch(email -> email.equalsIgnoreCase(value));
+                        .anyMatch(email -> email.equalsIgnoreCase(value.toString()));
                 break;
             case PHONENUMBERS:
                 searchEngine = contact -> Arrays.stream(contact.getPhoneNumbers())
-                        .anyMatch(number -> number.equalsIgnoreCase(value));
+                        .anyMatch(number -> number.equals(value.toString()));
                 break;
             default:
                 throw new IllegalStateException("Valor inesperado: " + criteria);
@@ -325,34 +351,61 @@ public class ContactCRUD implements CRUD<Contact> {
         return results;
     }  
     
-    @Override
-    public void delete (int option){
-        
-    }
-    
     /**
-     * Returns the list of contacts as an array.
-     * @return An array with the contacts.
+     * Update an element values by setting the selected attributes.
+     * @param contact The element to be updated.
+     * @param criteria Criteria for the selection of the attribute to be updated.
+     * @param value The new value for the update.
      */
     @Override
-    public Contact[] getElementList(){
-        return this.contactList.toArray(new Contact[this.contactList.size()]);
-    }
+    public void update(Contact contact, Criteria criteria, String value){
+        /*switch(criteria){
+            case NAME:
+                contact.setName((String)value);
+                break;
+            case LASTNAME:
+                contact.setLastNames((String)value);
+                break;
+            case BIRTHDATE:
+                contact.setBirthDate((LocalDate)value);
+                break;
+            case RATING:
+                contact.setRating((int)value);
+                break;
+            case EMAILS:
+                contact.addEmail((String)value);
+                break;
+            case PHONENUMBERS:
+                contact.addPhoneNumber((String)value);
+                break;
+            default:
+                throw new IllegalStateException("Valor inesperado: " + criteria);
+        }*/
+        criteria.getSetter().accept(contact, value);
+    }    
     
     /**
-     * Returns the contact with the selected ID.
-     * @param ID The ID of the contact.
-     * @return A contact identified.
+     * Removing a element if exists in the ArrayList.
+     * @param list An ArrayList with the elements.
+     * @param criteria Criteria for identify an element in the ArrayList.
+     * @param value The value to identify an element.
      */
     @Override
-    public Contact getElementByID(String ID){
-        ArrayList<Contact> found = this.search(this.contactList, Criteria.ID, ID);
-        if (found.size() > 0)
-            return found.get(0);
-        else
-            return null;
+    public boolean delete(ArrayList<Contact> list, Criteria criteria, Object value){
+        Predicate<Contact> removeCondition;
+        switch(criteria) {
+            case ID:
+                removeCondition = contact -> contact.getDNI().equalsIgnoreCase(value.toString());
+                return list.removeIf(removeCondition);
+            case NAMEANDLASTNAME:
+                removeCondition = contact -> (contact.getName() + " " + 
+                        contact.getLastNames()).equalsIgnoreCase(value.toString());
+                return list.removeIf(removeCondition);
+            default:
+                throw new IllegalStateException("Valor inesperado: " + criteria);
+        }
     }
-    
+           
     /**
      * Compare the name of two contacts.
      * @param c1 A first contact.
@@ -451,5 +504,28 @@ public class ContactCRUD implements CRUD<Contact> {
                 return true;
         }
         return false;
+    }
+    
+    /**
+     * Returns the list of contacts as an array.
+     * @return An array with the contacts.
+     */
+    @Override
+    public Contact[] getElementList(){
+        return this.contactList.toArray(new Contact[this.contactList.size()]);
+    }
+    
+    /**
+     * Returns the contact with the selected ID.
+     * @param ID The ID of the contact.
+     * @return A contact identified.
+     */
+    @Override
+    public Contact getElementByID(String ID){
+        ArrayList<Contact> found = this.search(this.contactList, Criteria.ID, ID);
+        if (!found.isEmpty())
+            return found.get(0);
+        else
+            return null;
     }
 }

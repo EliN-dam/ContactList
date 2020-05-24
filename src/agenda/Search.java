@@ -30,9 +30,10 @@ public class Search {
                 System.out.println();
                 if (Console.inRange(option, 1, exit)){
                     if (option != exit){
-                        String value = this.getSearchValue(option);
+                        Object value = this.getSearchValue(option);
                         this.contacts.searchElement(option, value);
                         Console.toContinue();
+                        option = exit;
                     }
                 } else
                     System.out.println("La opción seleccionada no "
@@ -45,11 +46,11 @@ public class Search {
     
     /**
      * Request the user the value for the search criteria.
-     * @param criteria Criteria for searching in the contact list.
+     * @param option Criteria for searching in the contact list.
      * @return The value for the search.
      */
-    public String getSearchValue(int option){
-        String value;
+    public Object getSearchValue(int option){
+        Object value;
         switch(option){
             case 1:
                 value = Console.validString("Escribe el DNI del contacto que desea "

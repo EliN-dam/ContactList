@@ -93,7 +93,7 @@ public class ContactManager implements Manager<Contact> {
         current.setLastNames(Console.readLine("Escribe los apellido/s del contacto: ")
                 .trim());
         if (Console.makeSure("¿Desea añadir la fecha de nacimiento?"))
-            current.setBirthDate(Console.validDate("Ecriba la fecha de nacimiento "
+            current.setBirthDate(Console.validDate("Escriba la fecha de nacimiento "
                     + "(dd-MM-aaaa): "));
         if (Console.makeSure("¿Desea añadir una puntuación al contacto?"))
             current.setRating(Console.validInt("Introduce la puntuación: ", 1, 5));

@@ -75,6 +75,15 @@ public class Contact implements Serializable {
             this.birthDate = birthDate;
     }
 
+    // Overload for Criteria setter variable.
+    public void setBirthDate(String birthDate){
+        LocalDate value = Console.checkDate(birthDate, "yyyy-MM-dd");
+        if (value != null) {
+            if (value.compareTo(LocalDate.now()) < 0)
+                this.birthDate = value;
+        }
+    }
+    
     public int getRating() {
         return rating;
     }
@@ -82,6 +91,13 @@ public class Contact implements Serializable {
     public void setRating(int rating) {
         if (Console.inRange(rating, 1, 5))
             this.rating = rating;
+    }
+    
+    // Overload for Criteria setter variable.
+    public void setRating(String rating){
+        int value = Integer.valueOf(rating);
+        if (Console.inRange(value, 1, 5))
+            this.rating = value;
     }
 
     public String[] getEmails() {

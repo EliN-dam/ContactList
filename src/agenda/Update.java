@@ -73,7 +73,7 @@ public class Update{
                         + "contacto: ").trim();
                 break;
             case 3:
-                value = Console.validDate("Ecriba una nueva fecha de nacimiento "
+                value = Console.validDate("Escriba una nueva fecha de nacimiento "
                         + "(dd-MM-aaaa): ");
                 break;
             case 4:

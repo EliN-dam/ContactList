@@ -31,8 +31,14 @@ public class Delete {
                 System.out.println();
                 if (Console.inRange(option, 1, exit)){
                     if (option != exit){
-                        this.contacts.delete(option);
+                        Object value = this.getIdentifyValue(option);
+                        if (this.contacts.deleteElement(option, value))
+                            System.out.println("El contácto se ha eliminado con éxito.");
+                        else
+                            System.out.println("No se ha encontrado el contacto "
+                                    + "en la agenda, contacto no eliminado.");
                         Console.toContinue();
+                        option = exit;
                     }
                 } else
                     System.out.println("La opción seleccionada no "
@@ -41,5 +47,27 @@ public class Delete {
                 System.out.println(Console.EOF + "Opción no válida, intente lo de nuevo..." + Console.EOF);
             }
         } while (option != exit);
+    }
+    
+    /**
+     * Request the user for a value to identify a contact.
+     * @param option Criteria for identify a contact.
+     * @return The value to identify a contact in the contact list.
+     */
+    public Object getIdentifyValue(int option){
+        Object value;
+        switch(option){
+            case 1:
+                value = Console.validString("Escribe el DNI del contacto que desea "
+                        + "eliminar: ", 9, 9);
+                break;
+            case 2:
+                value = Console.readLine("Escribe los nombre y apellidos del "
+                        + "contacto que desea eliminar: ").trim();
+                break;
+            default:
+                throw new IllegalStateException("Valor inesperado: " + option);
+        }
+        return value;
     }
 }

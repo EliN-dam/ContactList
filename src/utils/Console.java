@@ -327,13 +327,11 @@ public class Console {
         do {
             line = readLine(message).trim();
             line = formatDate(line);
-            try {
-                DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                date = LocalDate.parse(line, dateFormat);
+            date = checkDate(line, "dd-MM-yyyy");
+            if (date != null)
                 success = true;
-            } catch (DateTimeParseException e){
+            else
                 System.out.println("Debe introducir una fecha válida (dd-MM-aaaa)... ");
-            }
         } while(!success);
         return date;
     }
@@ -370,6 +368,21 @@ public class Console {
         }
         return formatedDate;
     }
+    
+    /**
+     * Check if a String contains a valid date and transforms it into a LocatDate 
+     * type.
+     * @param date A string with a date
+     * @return A LocalDate type dates or nulls if parse fails.
+     */
+    public static LocalDate checkDate(String date, String dateformat){
+        try {
+            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(dateformat);
+            return LocalDate.parse(date, dateFormat);
+        } catch (DateTimeParseException e){
+            return null;
+        }
+    }  
     
     /**
      * Ask the user for a identification number and check if it's valid.

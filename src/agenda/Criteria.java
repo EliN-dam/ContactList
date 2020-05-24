@@ -1,8 +1,9 @@
 package agenda;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Function;
+import java.util.function.BiConsumer;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
@@ -14,41 +15,49 @@ import java.util.function.Predicate;
  */
 enum Criteria {
     
-    ID(Contact::getDNI, null),
-    NAME(Contact::getName, ContactCRUD::compareByName),
-    LASTNAME(Contact::getLastNames, ContactCRUD::compareByLastName),
+    ID(Contact::getDNI, Contact::setDNI, null),
+    NAME(Contact::getName, Contact::setName ,ContactCRUD::compareByName),
+    LASTNAME(Contact::getLastNames, Contact::setLastNames, ContactCRUD::compareByLastName),
     BIRTHDATE(contact -> {
             if (contact.getBirthDate() != null)
                 return contact.getBirthDate();
             else
                 return "N/A";
-    }, ContactCRUD::compareByBirthDate),
-    RATING(Contact::getRating, ContactCRUD::compareByRating),
+    }, Contact::setBirthDate, ContactCRUD::compareByBirthDate),
+    RATING(Contact::getRating, Contact::setRating, ContactCRUD::compareByRating),
     EMAILS(contact -> { 
             if (contact.getEmails().length > 0)
-                return String.join(", ", contact.getEmails()); // Comprobar el delimitador.
+                return String.join(", ", contact.getEmails());
             else
                 return "N/A";
-    }, null),
+    }, Contact::addEmail, null),
     PHONENUMBERS(contact -> { 
             if (contact.getPhoneNumbers().length > 0)
                 return String.join(", ", contact.getPhoneNumbers());
             else
                 return "N/A";
-    }, null);
+    }, Contact::addPhoneNumber, null),
+    NAMEANDLASTNAME(null, null, null); // This constant is only for delete function.
     
-    private final Function<Contact, Object> method;
+    private final Function<Contact, Object> getter;
+    private final BiConsumer<Contact, String> setter;
     private final Comparator<Contact> comparator;
     
-    private Criteria(Function<Contact, Object> function, Comparator<Contact> comparator){
-        this.method = function;
+    private Criteria(Function<Contact, Object> getter, BiConsumer<Contact, String> setter, 
+                     Comparator<Contact> comparator){
+        this.getter = getter;
+        this.setter = setter;
         this.comparator = comparator;
     }
     
-    public Function<Contact, Object> getMethod() {
-        return this.method;
+    public Function<Contact, Object> getGetter() {
+        return this.getter;
     }       
 
+    public BiConsumer<Contact, String> getSetter() {
+        return this.setter;
+    }
+    
     public Comparator<Contact> getComparator() {
         return comparator;
     }  
