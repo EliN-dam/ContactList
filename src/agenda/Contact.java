@@ -33,7 +33,7 @@ public class Contact implements Serializable {
             this.DNI = dni;
         this.name = name;
         this.lastNames = lastNames;
-        if (birthDate.compareTo(LocalDate.now()) < 0) // Check if the date is older.
+        if (birthDate.isBefore(LocalDate.now())) // Check if the date is older.
             this.birthDate = birthDate;
         if (Console.inRange(rating, 1, 5))
             this.rating = rating;
@@ -71,7 +71,7 @@ public class Contact implements Serializable {
     }
 
     public void setBirthDate(LocalDate birthDate) {
-        if (birthDate.compareTo(LocalDate.now()) < 0)
+        if (birthDate.isBefore(LocalDate.now()))
             this.birthDate = birthDate;
     }
 
@@ -79,7 +79,7 @@ public class Contact implements Serializable {
     public void setBirthDate(String birthDate){
         LocalDate value = Console.checkDate(birthDate, "yyyy-MM-dd");
         if (value != null) {
-            if (value.compareTo(LocalDate.now()) < 0)
+            if (value.isBefore(LocalDate.now()))
                 this.birthDate = value;
         }
     }
@@ -143,9 +143,92 @@ public class Contact implements Serializable {
             return false;
         }
         final Contact other = (Contact) obj;
-        if (!Objects.equals(this.DNI, other.DNI)) {
-            return false;
+        return Objects.equals(this.DNI, other.DNI);
+    }
+    
+    /**
+     * Compare the name of two contacts.
+     * @param c1 A first contact.
+     * @param c2 A second contact to compare to.
+     * @return <ul>
+     *              <li>A negative integer - If the first contact name is less 
+     *                  than the second one</li>
+     *              <li>Zero - If both names are equals</li>
+     *              <li>A positive integer - If the first contact name is greater
+     *                  than the second one</li>
+     *         </ul>
+     */
+    public static int compareByName(Contact c1, Contact c2){
+        if (c1.getName().equalsIgnoreCase(c2.getName()))
+            return c1.getLastNames().compareTo(c2.getLastNames());
+        else
+            return c1.getName().compareTo(c2.getName());
+    }
+
+    /**
+     * Compare the last name of two contacts.
+     * @param c1 A first contact.
+     * @param c2 A second contact to compare to.
+     * @return <ul>
+     *              <li>A negative integer - If the first contact last name is 
+     *                  less than the second one</li>
+     *              <li>Zero - If both last names are equals</li>
+     *              <li>A positive integer - If the first contact last name is 
+     *                  greater than the second one</li>
+     *         </ul>
+     */
+    public static int compareByLastName(Contact c1, Contact c2){
+        if (c1.getLastNames().equalsIgnoreCase(c2.getLastNames()))
+            return c1.getName().compareTo(c2.getName());
+        else
+            return c1.getLastNames().compareTo(c2.getLastNames());
+    }
+
+    /**
+     * Compare the birthdate of two contacts.
+     * @param c1 A first contact.
+     * @param c2 A second contact to compare to.
+     * @return <ul>
+     *              <li>A negative integer - If the first contact birthdate is 
+     *                  less than the second one or is null</li>
+     *              <li>Zero - If both birthdates are equals</li>
+     *              <li>A positive integer - If the first contact birthdate is 
+     *                  greater than the second one or is null</li>
+     *         </ul>
+     */
+    public static int compareByBirthDate(Contact c1, Contact c2){
+        if (c1.getBirthDate() != null){ 
+            if (c2.getBirthDate() != null){
+                if (c1.getBirthDate().equals(c2.getBirthDate()))
+                    return c1.getName().compareTo(c2.getName());
+                else
+                    return c1.getBirthDate().compareTo(c2.getBirthDate());
+            } else {
+               return -1;
+            }
+        } else { // Manage null values
+            if (c2 == null)
+                return 0;
+            return 1;
         }
-        return true;
+    }
+
+    /**
+     * Compare the rating of two contacts.
+     * @param c1 A first contact.
+     * @param c2 A second contact to compare to.
+     * @return <ul>
+     *              <li>A negative integer - If the first contact rating is 
+     *                  lower than the second one</li>
+     *              <li>Zero - If both ratings are equals</li>
+     *              <li>A positive integer - If the first contact rating is 
+     *                  higher than the second one</li>
+     *         </ul>
+     */
+    public static int compareByRating(Contact c1, Contact c2){
+        if (c1.getRating() == c2.getRating())
+            return c1.getName().compareTo(c2.getName());
+        else
+            return c2.getRating() - c1.getRating();
     }
 }

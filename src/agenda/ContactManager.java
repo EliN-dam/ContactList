@@ -32,7 +32,7 @@ public class ContactManager implements Manager<Contact> {
                 System.out.println();
                 switch(option) {
                     case 1:
-                        if (this.contacts.addElement(this.newContact())){
+                        if (this.contacts.addElement(this.newElement())){
                             System.out.println("Contacto añadido con éxito a la "
                                     + "agenda.");
                             /* In the case the first contact add, allow to access 
@@ -86,7 +86,7 @@ public class ContactManager implements Manager<Contact> {
      * @return An array with the values introduced by the user.
      */
     @Override
-    public Contact newContact(){
+    public Contact newElement(){
         Contact current = new Contact();
         current.setDNI(Console.validDNI("Introduce el DNI del nuevo contacto: "));
         current.setName(Console.readLine("Escribe el nombre/s del contacto: ").trim());

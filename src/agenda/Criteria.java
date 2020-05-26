@@ -16,15 +16,15 @@ import java.util.function.Predicate;
 enum Criteria {
     
     ID(Contact::getDNI, Contact::setDNI, null),
-    NAME(Contact::getName, Contact::setName ,ContactCRUD::compareByName),
-    LASTNAME(Contact::getLastNames, Contact::setLastNames, ContactCRUD::compareByLastName),
+    NAME(Contact::getName, Contact::setName ,Contact::compareByName),
+    LASTNAME(Contact::getLastNames, Contact::setLastNames, Contact::compareByLastName),
     BIRTHDATE(contact -> {
             if (contact.getBirthDate() != null)
                 return contact.getBirthDate();
             else
                 return "N/A";
-    }, Contact::setBirthDate, ContactCRUD::compareByBirthDate),
-    RATING(Contact::getRating, Contact::setRating, ContactCRUD::compareByRating),
+    }, Contact::setBirthDate, Contact::compareByBirthDate),
+    RATING(Contact::getRating, Contact::setRating, Contact::compareByRating),
     EMAILS(contact -> { 
             if (contact.getEmails().length > 0)
                 return String.join(", ", contact.getEmails());
