@@ -1,6 +1,6 @@
 package agenda;
 
-import java.time.LocalDate;
+import utils.Console;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -196,7 +196,14 @@ public class ContactCRUD implements CRUD<Contact> {
             default:
                 throw new IllegalStateException("Valor inesperado: " + option);
         }
-        return this.delete(this.contactList, criteria, value);
+        ArrayList<Contact> results = this.search(this.contactList, criteria, value);
+        if (!results.isEmpty()){
+            this.list(results, "Contacto encontrado: " + value.toString());
+            if (Console.makeSure("Se perderan todos los datos del contacto ¿Está seguro?"))
+                return this.delete(this.contactList, criteria, value);
+        } else
+            System.out.println("No se ha encontrado el contacto en la agenda");
+        return false;
     }
     
     /**
@@ -342,6 +349,10 @@ public class ContactCRUD implements CRUD<Contact> {
             case PHONENUMBERS:
                 searchEngine = contact -> Arrays.stream(contact.getPhoneNumbers())
                         .anyMatch(number -> number.equals(value.toString()));
+                break;
+            case FULLNAME:
+                searchEngine = contact -> (contact.getName() + " " + 
+                        contact.getLastNames()).equalsIgnoreCase(value.toString());
                 break;
             default:
                 throw new IllegalStateException("Valor inesperado: " + criteria);

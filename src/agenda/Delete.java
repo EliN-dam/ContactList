@@ -35,8 +35,7 @@ public class Delete {
                         if (this.contacts.deleteElement(option, value))
                             System.out.println("El contácto se ha eliminado con éxito.");
                         else
-                            System.out.println("No se ha encontrado el contacto "
-                                    + "en la agenda, contacto no eliminado.");
+                            System.out.println("Contacto no eliminado.");
                         Console.toContinue();
                         option = exit;
                     }
